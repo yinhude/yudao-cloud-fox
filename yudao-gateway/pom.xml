@@ -69,6 +69,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.5.0</version> <!-- 确保 Nacos 客户端版本一致 -->
+        </dependency>
     </dependencies>
 
 

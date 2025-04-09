@@ -10,5 +10,4 @@ public class GatewayServerApplication {
         // 启动 Spring Boot 应用
         SpringApplication.run(GatewayServerApplication.class, args);
     }
-
 }

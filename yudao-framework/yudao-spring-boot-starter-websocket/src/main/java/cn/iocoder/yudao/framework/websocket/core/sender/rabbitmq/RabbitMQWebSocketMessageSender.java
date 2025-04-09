@@ -3,9 +3,11 @@ package cn.iocoder.yudao.framework.websocket.core.sender.rabbitmq;
 import cn.iocoder.yudao.framework.websocket.core.sender.AbstractWebSocketMessageSender;
 import cn.iocoder.yudao.framework.websocket.core.sender.WebSocketMessageSender;
 import cn.iocoder.yudao.framework.websocket.core.session.WebSocketSessionManager;
+import lombok.extern.apachecommons.CommonsLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * 基于 RabbitMQ 的 {@link WebSocketMessageSender} 实现类
@@ -13,6 +15,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
  * @author 芋道源码
  */
 @Slf4j
+@Component
 public class RabbitMQWebSocketMessageSender extends AbstractWebSocketMessageSender {
 
     private final RabbitTemplate rabbitTemplate;
