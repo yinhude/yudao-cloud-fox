@@ -26,5 +26,4 @@ public class InfraServerApplication {
         // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
         // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
     }
-
 }

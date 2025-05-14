@@ -32,6 +32,10 @@ public class TenantDatabaseInterceptor implements TenantLineHandler {
 
     @Override
     public Expression getTenantId() {
+        if (TenantContextHolder.getTenantId() == null) {
+            //todo 临时处理没有租户的服务使用默认租户
+            return new LongValue(1L);
+        }
         return new LongValue(TenantContextHolder.getRequiredTenantId());
     }
 
