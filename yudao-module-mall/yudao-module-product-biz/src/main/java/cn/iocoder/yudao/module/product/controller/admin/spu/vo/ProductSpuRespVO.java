@@ -20,7 +20,9 @@ public class ProductSpuRespVO {
     @Schema(description = "商品 SPU 编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
     @ExcelProperty("商品编号")
     private Long id;
-
+    @Schema(description = "基础产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
+    @ExcelProperty("基础产品编号")
+    private Long bproductId;
     @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "清凉小短袖")
     @ExcelProperty("商品名称")
     private String name;

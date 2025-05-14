@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.system.controller.app.dict;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+import cn.iocoder.yudao.module.system.controller.admin.dict.vo.data.DictDataSimpleRespVO;
 import cn.iocoder.yudao.module.system.controller.app.dict.vo.AppDictDataRespVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.dict.DictDataDO;
 import cn.iocoder.yudao.module.system.service.dict.DictDataService;
@@ -40,4 +41,12 @@ public class AppDictDataController {
         return success(BeanUtils.toBean(list, AppDictDataRespVO.class));
     }
 
+    @GetMapping(value = {"/list-all-simple", "simple-list"})
+    @Operation(summary = "获得全部字典数据列表", description = "一般用于管理后台缓存字典数据在本地")
+    // 无需添加权限认证，因为前端全局都需要
+    public CommonResult<List<DictDataSimpleRespVO>> getSimpleDictDataList() {
+        List<DictDataDO> list = dictDataService.getDictDataList(
+                CommonStatusEnum.ENABLE.getStatus(), null);
+        return success(BeanUtils.toBean(list, DictDataSimpleRespVO.class));
+    }
 }

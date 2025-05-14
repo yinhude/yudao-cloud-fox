@@ -46,6 +46,7 @@ public class AppMemberUserController {
         return success(true);
     }
 
+
     @PutMapping("/update-mobile")
     @Operation(summary = "修改用户手机")
     public CommonResult<Boolean> updateUserMobile(@RequestBody @Valid AppMemberUserUpdateMobileReqVO reqVO) {

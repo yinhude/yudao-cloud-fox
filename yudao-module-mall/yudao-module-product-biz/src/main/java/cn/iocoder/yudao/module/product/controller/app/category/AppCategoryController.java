@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.product.controller.app.category;
 import cn.hutool.core.collection.CollUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+import cn.iocoder.yudao.module.product.controller.admin.category.vo.ProductCategoryRespVO;
 import cn.iocoder.yudao.module.product.controller.app.category.vo.AppCategoryRespVO;
 import cn.iocoder.yudao.module.product.dal.dataobject.category.ProductCategoryDO;
 import cn.iocoder.yudao.module.product.service.category.ProductCategoryService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,15 @@ public class AppCategoryController {
         List<ProductCategoryDO> list = categoryService.getEnableCategoryList();
         list.sort(Comparator.comparing(ProductCategoryDO::getSort));
         return success(BeanUtils.toBean(list, AppCategoryRespVO.class));
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "获得商品分类")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PermitAll
+    public CommonResult<ProductCategoryRespVO> getCategory(@RequestParam("id") Long id) {
+        ProductCategoryDO category = categoryService.getCategory(id);
+        return success(BeanUtils.toBean(category, ProductCategoryRespVO.class));
     }
 
     @GetMapping("/list-by-ids")

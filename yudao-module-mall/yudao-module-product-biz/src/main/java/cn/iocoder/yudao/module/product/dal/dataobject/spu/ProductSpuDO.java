@@ -36,6 +36,11 @@ public class ProductSpuDO extends BaseDO {
     @TableId
     private Long id;
 
+    /**
+     * 关联基础产品id
+     */
+    private Long bproductId;
+
     // ========== 基本信息 =========
 
     /**

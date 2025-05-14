@@ -7,8 +7,10 @@ import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
 import cn.iocoder.yudao.framework.security.core.LoginUser;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.framework.tenant.config.TenantProperties;
+import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.framework.tenant.core.service.TenantFrameworkService;
+import cn.iocoder.yudao.framework.tenant.core.util.TenantUtils;
 import cn.iocoder.yudao.framework.web.config.WebProperties;
 import cn.iocoder.yudao.framework.web.core.filter.ApiRequestFilter;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
@@ -18,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerMapping;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -55,6 +59,8 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         Long tenantId = TenantContextHolder.getTenantId();
+        // 检查请求的处理器方法是否有 @TenantIgnore 注解
+        boolean isIgnoreUrl = isIgnoreUrl(request);
         // 1. 登陆的用户，校验是否有权限访问该租户，避免越权问题。
         LoginUser user = SecurityFrameworkUtils.getLoginUser();
         if (user != null) {
@@ -73,8 +79,9 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
             }
         }
 
-        // 如果非允许忽略租户的 URL，则校验租户是否合法
-        if (!isIgnoreUrl(request)) {
+
+        // 如果不需要跳过租户校验，则进行租户校验
+        if (!isIgnoreUrl) {
             // 2. 如果请求未带租户的编号，不允许访问。
             if (tenantId == null) {
                 log.error("[doFilterInternal][URL({}/{}) 未传递租户编号]", request.getRequestURI(), request.getMethod());
@@ -90,7 +97,7 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
                 ServletUtils.writeJSON(response, result);
                 return;
             }
-        } else { // 如果是允许忽略租户的 URL，若未传递租户编号，则默认忽略租户编号，避免报错
+        } else { // 如果需要跳过租户校验，且未传递租户编号，则默认忽略租户编号
             if (tenantId == null) {
                 TenantContextHolder.setIgnore(true);
             }
@@ -113,5 +120,4 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
         }
         return false;
     }
-
 }

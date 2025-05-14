@@ -1,11 +1,19 @@
 package cn.iocoder.yudao.framework.tenant.core.util;
 
+import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT_ID;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.context.ApplicationContext;
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 多租户 Util
@@ -109,5 +117,24 @@ public class TenantUtils {
             headers.put(HEADER_TENANT_ID, tenantId.toString());
         }
     }
+
+    private static RequestMappingHandlerMapping handlerMapping;
+    private static final Map<String, Boolean> TENANT_IGNORE_CACHE = new ConcurrentHashMap<>();
+
+    // 初始化方法，需要在Spring容器启动后调用
+    public static void init(ApplicationContext applicationContext) {
+        handlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+    }
+
+
+    private static boolean checkMethodAndClass(Method method) {
+        // 检查方法上的注解
+        if (method.isAnnotationPresent(TenantIgnore.class)) {
+            return true;
+        }
+        // 检查类上的注解
+        return method.getDeclaringClass().isAnnotationPresent(TenantIgnore.class);
+    }
+
 
 }
